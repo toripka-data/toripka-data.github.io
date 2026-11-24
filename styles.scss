@@ -1,72 +1,93 @@
 /*-- scss:defaults --*/
-// Your carousel colors
-$plum:  #0E0B2E;
-$plum-2: #1C1747;
-$pink:  #FF2E93;
-$lav:   #F4F1FF;
-$yellow: #FFF29B;
+// Lime Pace theme
+$forest:   #0C1F17;   // background
+$forest-2: #15301F;   // cards, code blocks
+$forest-3: #244A33;   // borders
+$lime:     #C6F432;   // main accent
+$ice:      #7CC6FE;   // second color
+$mist:     #E9F5EC;   // text
 
-$body-bg: #FFFFFF;
-$body-color: $plum;
-$primary: $pink;
-$link-color: #C2186E;          // darker pink so links pass contrast on white
-$navbar-bg: $plum;
-$navbar-fg: $lav;
-$navbar-hl: $pink;
-$footer-bg: $plum;
-$footer-fg: $lav;
+$body-bg: $forest;
+$body-color: $mist;
+$primary: $lime;
+$secondary: $ice;
+$link-color: $lime;
+$link-hover-color: $ice;
+$navbar-bg: $forest;
+$navbar-fg: $mist;
+$navbar-hl: $lime;
+$footer-bg: $forest;
+$footer-fg: rgba($mist, 0.75);
+$border-color: $forest-3;
+$code-block-bg: $forest-2;
+$code-color: $lime;
+$table-color: $mist;
+$table-border-color: $forest-3;
+$btn-font-weight: 700;
 
-$font-family-sans-serif: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+$font-family-sans-serif: "Inter", "Helvetica Neue", Arial, sans-serif;
 $font-family-monospace: "Space Mono", Menlo, monospace;
-$headings-font-weight: 800;
+$headings-font-family: "Unbounded", "Inter", sans-serif;
+$headings-font-weight: 700;
+$headings-color: $mist;
 
 /*-- scss:rules --*/
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;800;900&family=Space+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
 
-h1.title, .hero h1 {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.02em;
+h1.title { text-transform: uppercase; letter-spacing: 0.01em; line-height: 1.15; }
+h2 { text-transform: uppercase; font-size: 1.35rem; letter-spacing: 0.02em; margin-top: 2.2rem; }
+h3 { font-size: 1.1rem; }
+
+.navbar {
+  border-bottom: 1px solid $forest-3;
+  .navbar-title { font-family: "Unbounded", sans-serif; letter-spacing: 0.06em; text-transform: uppercase; font-size: 1rem; }
 }
 
-h2 { letter-spacing: -0.03em; }
-
 .hero {
-  background: $plum;
-  color: $lav;
+  background: $forest-2;
+  border: 1px solid $forest-3;
   border-radius: 24px;
   padding: 3rem 2.5rem;
   margin-bottom: 2.5rem;
-  h1 { font-size: 3.4rem; margin: 0 0 .5rem; color: $lav; }
-  .pink { color: $pink; font-family: "Inter Tight", sans-serif; font-style: normal; font-weight: 900; }
-  p { font-size: 1.2rem; max-width: 40rem; }
+  h1 { font-family: "Unbounded", sans-serif; text-transform: uppercase; font-size: 2.4rem; line-height: 1.15; margin: .6rem 0 1rem; color: $mist; }
+  .accent { color: $lime; }
+  p { font-size: 1.15rem; max-width: 40rem; }
 }
 
 .kicker {
   font-family: "Space Mono", monospace;
   font-size: .85rem;
-  letter-spacing: .08em;
+  letter-spacing: .1em;
   text-transform: uppercase;
-  color: $yellow;
+  color: $lime;
 }
 
-// Project cards on the listing page
+// Project cards on home and the listing page
+.grid > .g-col-12,
 .quarto-grid-item {
+  background: $forest-2;
+  border: 1px solid rgba($ice, 0.35);
   border-radius: 18px;
-  border: 2px solid #E6E1F7;
-  &:hover { border-color: $pink; }
+  padding: 1.25rem 1.4rem;
+  &:hover { border-color: $lime; }
 }
+.quarto-grid-item .card-body, .quarto-grid-item .card-footer { background: transparent; }
 
-// "Key finding" callout
+.btn-primary { color: $forest !important; border-radius: 999px; padding: .7rem 1.4rem; }
+
 .callout-tip {
-  border-left-color: $pink !important;
+  border-left-color: $lime !important;
+  .callout-header { background: rgba($lime, 0.12) !important; }
 }
 
 .stat {
   font-family: "Space Mono", monospace;
-  background: $lav;
-  border-radius: 10px;
-  padding: .15rem .5rem;
+  background: rgba($lime, 0.14);
+  color: $lime;
+  border-radius: 8px;
+  padding: .1rem .45rem;
   white-space: nowrap;
 }
+
+// Charts saved with a forest background sit flush on the page
+img { border-radius: 14px; }

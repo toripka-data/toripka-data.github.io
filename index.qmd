@@ -6,7 +6,7 @@ toc: false
 ::: {.hero}
 [SPORT DATA ANALYST · ENDURANCE ATHLETE]{.kicker}
 
-# Hi, I'm Tori. I turn [race data]{.pink} into answers.
+# Hi, I'm Tori. I turn [race data]{.accent} into answers.
 
 I'm finishing an M.S. in Data Analytics (Sport Performance & Sport Business) at the University of Mississippi, with a B.S. in Kinesiology from Oregon State. I build models in R and SQL around the sports I watch and race: Formula 1, marathons and Ironman 70.3.
 :::
