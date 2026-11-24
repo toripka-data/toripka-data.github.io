@@ -1,0 +1,43 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Tori Kekoa-Albert"
+  site-url: "https://toripka-data.github.io"
+  description: "Sport data analyst · endurance athlete · F1 nerd"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: projects.qmd
+        text: Projects
+      - href: about.qmd
+        text: About
+    right:
+      - icon: github
+        href: https://github.com/toripka-data
+        aria-label: GitHub
+      - icon: linkedin
+        href: https://www.linkedin.com/in/YOUR-LINKEDIN
+        aria-label: LinkedIn
+      - icon: instagram
+        href: https://www.instagram.com/toripka
+        aria-label: Instagram
+  page-footer:
+    center: "Built in R with Quarto · © 2026 Tori Kekoa-Albert"
+
+format:
+  html:
+    theme:
+      light: [cosmo, styles.scss]
+    toc: true
+    code-fold: true
+    code-tools: true
+    code-copy: true
+    smooth-scroll: true
+
+execute:
+  freeze: auto   # only re-runs a page's R code when that page changes
+  warning: false
+  message: false

@@ -1,0 +1,25 @@
+---
+title: "About"
+toc: false
+---
+
+I'm a sport data analyst with a kinesiology background, and an endurance athlete who can't stop measuring things.
+
+**Education**
+
+- M.S. Data Analytics, Sport Performance & Sport Business emphasis, University of Mississippi (in progress)
+- B.S. Kinesiology, Oregon State University
+
+**Tools:** R (tidyverse, ggplot2, machine learning), MySQL, Quarto
+
+**Experience**
+
+- Facility Operations Team Member, Life Time
+- Flexologist, StretchLab
+- PT Aide & Office Assistant, Healing Motion Physical Therapy
+
+**Off the clock:** marathons and ultras, training for my first Ironman 70.3 (July 2027), and crewing races.
+
+[Download my resume (PDF)](files/resume.pdf){.btn .btn-primary}
+
+<!-- Put your resume in files/resume.pdf -->

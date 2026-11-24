@@ -1,0 +1,35 @@
+---
+title: ""
+toc: false
+---
+
+::: {.hero}
+[SPORT DATA ANALYST · ENDURANCE ATHLETE]{.kicker}
+
+# Hi, I'm Tori. I turn [race data]{.pink} into answers.
+
+I'm finishing an M.S. in Data Analytics (Sport Performance & Sport Business) at the University of Mississippi, with a B.S. in Kinesiology from Oregon State. I build models in R and SQL around the sports I watch and race: Formula 1, marathons and Ironman 70.3.
+:::
+
+## Featured projects
+
+:::: {.grid}
+
+::: {.g-col-12 .g-col-md-4}
+### [Vegas GP podium model](projects/vegas-gp/index.qmd)
+Logistic regression in R on the 2026 F1 season to predict the Las Vegas Grand Prix podium.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+### [My 70.3 run pace](projects/ironman-pace/index.qmd)
+A regression model trained on 179 of my own runs, then tested on 12 runs it never saw.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+### [Does pole actually win?](projects/f1-sql/index.qmd)
+A MySQL database of 75 years of F1 results, queried to measure how starting position drives outcomes.
+:::
+
+::::
+
+[See all projects →](projects.qmd)

@@ -1,0 +1,5 @@
+/.quarto/
+/_site/
+*.csv
+.Rhistory
+.RData

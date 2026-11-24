@@ -1,0 +1,53 @@
+---
+title: "Does pole position actually win?"
+description: "A MySQL database of 75 years of F1 results, queried with CTEs and window functions."
+date: 2026-12-15        # change to the day you publish
+categories: [SQL, MySQL, F1]
+image: win_rate_by_grid.png
+draft: true            # remove this line when the project is done
+---
+
+::: {.callout-tip}
+## Key finding
+[ADD: e.g. "Pole wins X% of races; P2 wins Y%; only Z% of all wins came from outside the top 10."]
+:::
+
+## The question
+
+How often does each starting position win or reach the podium in Formula 1, and has that changed across eras and circuits?
+
+## The data
+
+The Kaggle *Formula 1 World Championship (1950–2024)* dataset (built from the Ergast database). I loaded 5 tables into MySQL: races, results, drivers, circuits and status ([ADD: row count] results).
+
+Data quirks I handled:
+
+- Missing values stored as the text `\N`, converted to real NULLs on load
+- Pit-lane starts (`grid = 0`) excluded
+- [ADD: anything else you found in your sanity checks]
+
+## Win and podium rate by grid slot
+
+![](win_rate_by_grid.png){fig-alt="[ADD: describe the chart]"}
+
+```sql
+-- Paste your query 5b here
+```
+
+## Deeper cuts
+
+### Has pole gotten more powerful?
+[ADD: finding + query 6a]
+
+### Which tracks punish a bad qualifying?
+[ADD: finding + query 6b]
+
+## Query I'm proudest of
+
+[ADD: the query and two sentences on how it works]
+
+## Limitations
+
+[ADD: e.g. field sizes and reliability differ a lot between eras]
+
+[Code on GitHub](https://github.com/toripka-data/f1-grid-position-sql){.btn .btn-primary}

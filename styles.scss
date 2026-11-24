@@ -1,0 +1,72 @@
+/*-- scss:defaults --*/
+// Your carousel colors
+$plum:  #0E0B2E;
+$plum-2: #1C1747;
+$pink:  #FF2E93;
+$lav:   #F4F1FF;
+$yellow: #FFF29B;
+
+$body-bg: #FFFFFF;
+$body-color: $plum;
+$primary: $pink;
+$link-color: #C2186E;          // darker pink so links pass contrast on white
+$navbar-bg: $plum;
+$navbar-fg: $lav;
+$navbar-hl: $pink;
+$footer-bg: $plum;
+$footer-fg: $lav;
+
+$font-family-sans-serif: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+$font-family-monospace: "Space Mono", Menlo, monospace;
+$headings-font-weight: 800;
+
+/*-- scss:rules --*/
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;800;900&family=Space+Mono:wght@400;700&display=swap");
+
+h1.title, .hero h1 {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+h2 { letter-spacing: -0.03em; }
+
+.hero {
+  background: $plum;
+  color: $lav;
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  margin-bottom: 2.5rem;
+  h1 { font-size: 3.4rem; margin: 0 0 .5rem; color: $lav; }
+  .pink { color: $pink; font-family: "Inter Tight", sans-serif; font-style: normal; font-weight: 900; }
+  p { font-size: 1.2rem; max-width: 40rem; }
+}
+
+.kicker {
+  font-family: "Space Mono", monospace;
+  font-size: .85rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: $yellow;
+}
+
+// Project cards on the listing page
+.quarto-grid-item {
+  border-radius: 18px;
+  border: 2px solid #E6E1F7;
+  &:hover { border-color: $pink; }
+}
+
+// "Key finding" callout
+.callout-tip {
+  border-left-color: $pink !important;
+}
+
+.stat {
+  font-family: "Space Mono", monospace;
+  background: $lav;
+  border-radius: 10px;
+  padding: .15rem .5rem;
+  white-space: nowrap;
+}

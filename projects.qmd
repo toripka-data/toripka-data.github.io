@@ -1,0 +1,12 @@
+---
+title: "Projects"
+toc: false
+listing:
+  contents: projects
+  type: grid
+  sort: "date desc"
+  categories: true
+  fields: [image, title, description, categories, date]
+---
+
+Every project starts with a question I actually wanted answered. Code for each one is on GitHub.

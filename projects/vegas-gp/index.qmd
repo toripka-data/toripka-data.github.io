@@ -1,0 +1,61 @@
+---
+title: "Predicting the Las Vegas GP podium"
+description: "Logistic regression in R on the 2026 F1 season."
+date: 2026-11-20
+categories: [R, machine learning, F1]
+image: thumbnail.png   # export a slide from your carousel as thumbnail.png
+---
+
+::: {.callout-tip}
+## Key finding
+Before qualifying, my model gave Antonelli the best podium chance at [77%]{.stat}. Verstappen ([55%]{.stat}) and Leclerc ([54%]{.stat}) were almost tied.
+:::
+
+## The question
+
+I went to the Las Vegas Grand Prix in 2025 as a fan. This year I wanted to see if a model could call the podium before the race.
+
+## The data
+
+All 20 Grands Prix of the 2026 season, pulled into R with the `f1dataR` package: [440 driver-race rows]{.stat}. I used only 2026 because the cars run under brand-new regulations this year, so older seasons describe different cars.
+
+## The model
+
+A logistic regression trained on who made the podium, using five features:
+
+| Feature | Variable |
+| --- | --- |
+| Starting position | `grid` |
+| Last 3 finishes | `form3` |
+| Team strength | `team_form` |
+| Reliability | `dnf_rate` |
+| Fast, low-downforce street tracks like Vegas | `low_df` |
+
+```{r}
+#| eval: false
+#| code-summary: "Model code"
+# Paste your model code here, or source it:
+# source("vegas_model.R")
+```
+
+## Results
+
+| Driver | Podium chance (pre-qualifying) |
+| --- | --- |
+| Antonelli | 77% |
+| Verstappen | 55% |
+| Leclerc | 54% |
+| Russell | 49% |
+| Norris | 36% |
+
+The probabilities add up to more than 100% because three drivers make the podium, not one.
+
+## What actually happened
+
+<!-- Fill in: the real podium, and how the model's picks compared. -->
+[ADD: actual Vegas podium and a one-line verdict on the model]
+
+## What I'd change
+
+- Starting grid matters most, so re-running the model after qualifying is essential. Antonelli's 5-place grid penalty changed the picture completely.
+- [ADD: one more lesson]
