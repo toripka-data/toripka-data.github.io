@@ -1,0 +1,135 @@
+[
+  {
+    "objectID": "projects/ironman-pace/index.html",
+    "href": "projects/ironman-pace/index.html",
+    "title": "Can my own runs predict my 70.3 run pace?",
+    "section": "",
+    "text": "TipKey finding\n\n\n\nThe model was off by about 41 sec/mile on runs from its own training period. On 12 new runs it missed by 1:09/mile, and it guessed too fast on 10 of 12. It assumed I’d keep getting faster, and a knee injury and new swim and bike training said otherwise."
+  },
+  {
+    "objectID": "projects/ironman-pace/index.html#the-question",
+    "href": "projects/ironman-pace/index.html#the-question",
+    "title": "Can my own runs predict my 70.3 run pace?",
+    "section": "The question",
+    "text": "The question\nI’m racing my first Ironman 70.3 on July 18, 2027. Can I predict my half-marathon pace from my own training data?"
+  },
+  {
+    "objectID": "projects/ironman-pace/index.html#the-data",
+    "href": "projects/ironman-pace/index.html#the-data",
+    "title": "Can my own runs predict my 70.3 run pace?",
+    "section": "The data",
+    "text": "The data\n\n179 runs from Strava, April 2025 to October 12, 2026, all before I started triathlon training (96 treadmill, 83 outside)\nTest set: 12 runs logged on COROS since October 13, 2026, during knee rehab\nTarget: average pace in minutes per mile"
+  },
+  {
+    "objectID": "projects/ironman-pace/index.html#the-model",
+    "href": "projects/ironman-pace/index.html#the-model",
+    "title": "Can my own runs predict my 70.3 run pace?",
+    "section": "The model",
+    "text": "The model\nA linear regression with six features: distance, average heart rate, treadmill vs outside, elevation gain per mile, trail runs, and weeks of training (a fitness trend).\n\n\nFull model code\n# ------------------------------------------------------------\n# 70.3 run pace model: train on pre-triathlon runs, test on new ones\n# Uses strava_runs_clean.csv (the output of strava_filter_1.R)\n# ------------------------------------------------------------\nlibrary(tidyverse)\n\nruns &lt;- read_csv(\"strava_runs_clean.csv\") %&gt;%\n  mutate(\n    elev_pm = elev_ft / miles,                                     # feet of climb per mile\n    weeks   = as.numeric(day - as_date(\"2025-04-28\")) / 7,         # fitness trend\n    trail   = as.integer(str_detect(name, regex(\"trail|wildwood|ultra\", ignore_case = TRUE)))\n  )\n\n# 1. Fit the model ----------------------------------------------\nfit &lt;- lm(pace ~ miles + avg_hr + treadmill + elev_pm + weeks + trail, data = runs)\nsummary(fit)\n# Per-mile effects, in seconds:\nround(coef(fit)[-1] * 60, 1)   # avg_hr x10 = ~23 s faster, weeks x4.35 = ~8 s/month faster\n\n# 2. 5-fold cross-validated error on the training runs ----------\nset.seed(1)\nfolds &lt;- sample(rep(1:5, length.out = nrow(runs)))\ncv_err &lt;- map_dbl(1:5, function(k) {\n  m &lt;- lm(formula(fit), data = runs[folds != k, ])\n  mean(abs(predict(m, runs[folds == k, ]) - runs$pace[folds == k]))\n})\nmean(cv_err) * 60   # ~41 sec per mile (random fold split, so yours may differ slightly)\n\n# 3. Test on the 12 runs since Oct 13 (from COROS) ---------------\ntest &lt;- tribble(\n  ~day,         ~km,   ~sec,          ~avg_hr, ~treadmill, ~elev_m,\n  \"2026-10-14\", 4.83,  24*60 + 10,    140,     1,          0,\n  \"2026-10-16\", 11.28, 63*60 + 45,    154,     1,          0,\n  \"2026-10-20\", 6.20,  35*60,         158,     1,          0,\n  \"2026-10-22\", 3.28,  17*60 + 20,    141,     1,          0,\n  \"2026-10-25\", 5.41,  30*60 + 6,     152,     1,          0,\n  \"2026-10-27\", 3.50,  20*60 + 6,     141,     1,          0,\n  \"2026-10-27\", 3.56,  20*60,         150,     0,          48,\n  \"2026-11-01\", 9.83,  74*60 + 11,    129,     0,          121,\n  \"2026-11-10\", 3.04,  17*60 + 52,    145,     1,          0,\n  \"2026-11-11\", 5.08,  38*60 + 28,    124,     1,          0,\n  \"2026-11-15\", 3.91,  23*60 + 22,    144,     0,          34,\n  \"2026-11-17\", 3.62,  21*60 + 1,     149,     1,          0\n) %&gt;%\n  mutate(\n    day     = as_date(day),\n    miles   = km / 1.609344,\n    pace    = (sec / 60) / miles,\n    elev_pm = elev_m * 3.28084 / miles,\n    weeks   = as.numeric(day - as_date(\"2025-04-28\")) / 7,\n    trail   = 0\n  ) %&gt;%\n  mutate(pred = predict(fit, newdata = .), miss_s = (pace - pred) * 60)\n\ntest %&gt;% select(day, miles, avg_hr, pace, pred, miss_s)\nmean(abs(test$miss_s))   # ~69 sec: average miss\nsum(test$miss_s &gt; 0)     # 10 of 12 guessed too fast\n\n# 4. 70.3 projection: 13.1 mi outside at 150 bpm, \"if I raced today\" ---\nrace &lt;- tibble(miles = 13.1, avg_hr = 150, treadmill = 0,\n               elev_pm = median(runs$elev_pm[runs$treadmill == 0 & runs$trail == 0 & runs$miles &gt;= 8]),\n               weeks = as.numeric(as_date(\"2026-11-23\") - as_date(\"2025-04-28\")) / 7, trail = 0)\npredict(fit, race)       # ~8.58 min/mi = 8:35"
+  },
+  {
+    "objectID": "projects/ironman-pace/index.html#what-it-learned-per-mile",
+    "href": "projects/ironman-pace/index.html#what-it-learned-per-mile",
+    "title": "Can my own runs predict my 70.3 run pace?",
+    "section": "What it learned (per mile)",
+    "text": "What it learned (per mile)\n\n\n\nChange\nEffect on pace\n\n\n\n\n+10 bpm heart rate\n23 sec faster\n\n\nEach month of training\n8 sec faster\n\n\nTreadmill vs outside\n17 sec slower\n\n\nTrail run\n1:46 slower\n\n\n+1 mile of distance\n3 sec slower"
+  },
+  {
+    "objectID": "projects/ironman-pace/index.html#the-test",
+    "href": "projects/ironman-pace/index.html#the-test",
+    "title": "Can my own runs predict my 70.3 run pace?",
+    "section": "The test",
+    "text": "The test\n\n\n\nPredicted vs actual pace on 12 runs the model never saw\n\n\nWhy it missed:\n\nIt assumed I’d keep getting faster. The training-weeks trend only ever went one way in my data.\nThen life changed. Knee rehab plus swimming and cycling, none of which the training data had seen.\nSome runs were easy on purpose. My two 12:00/mile runs were planned recovery runs, and the model can’t read my training plan."
+  },
+  {
+    "objectID": "projects/ironman-pace/index.html#my-70.3-prediction",
+    "href": "projects/ironman-pace/index.html#my-70.3-prediction",
+    "title": "Can my own runs predict my 70.3 run pace?",
+    "section": "My 70.3 prediction",
+    "text": "My 70.3 prediction\nFor 13.1 miles outside at 150 bpm, the model says 8:35/mile. Adding back its recent miss gives a realistic range of 9:15–9:35/mile. It still knows nothing about running off the bike."
+  },
+  {
+    "objectID": "projects/ironman-pace/index.html#next",
+    "href": "projects/ironman-pace/index.html#next",
+    "title": "Can my own runs predict my 70.3 run pace?",
+    "section": "Next",
+    "text": "Next\nIn June 2027, one month before race day, I’ll retrain it with seven more months of runs and my brick workouts."
+  },
+  {
+    "objectID": "projects/vegas-gp/index.html",
+    "href": "projects/vegas-gp/index.html",
+    "title": "Predicting the Las Vegas GP podium",
+    "section": "",
+    "text": "TipKey finding\n\n\n\nBefore qualifying, my model gave Antonelli the best podium chance at 77%. Verstappen (55%) and Leclerc (54%) were almost tied."
+  },
+  {
+    "objectID": "projects/vegas-gp/index.html#the-question",
+    "href": "projects/vegas-gp/index.html#the-question",
+    "title": "Predicting the Las Vegas GP podium",
+    "section": "The question",
+    "text": "The question\nI went to the Las Vegas Grand Prix in 2025 as a fan. This year I wanted to see if a model could call the podium before the race."
+  },
+  {
+    "objectID": "projects/vegas-gp/index.html#the-data",
+    "href": "projects/vegas-gp/index.html#the-data",
+    "title": "Predicting the Las Vegas GP podium",
+    "section": "The data",
+    "text": "The data\nAll 20 Grands Prix of the 2026 season, pulled into R with the f1dataR package: 440 driver-race rows. I used only 2026 because the cars run under brand-new regulations this year, so older seasons describe different cars."
+  },
+  {
+    "objectID": "projects/vegas-gp/index.html#the-model",
+    "href": "projects/vegas-gp/index.html#the-model",
+    "title": "Predicting the Las Vegas GP podium",
+    "section": "The model",
+    "text": "The model\nA logistic regression trained on who made the podium, using five features:\n\n\n\nFeature\nVariable\n\n\n\n\nStarting position\ngrid\n\n\nLast 3 finishes\nform3\n\n\nTeam strength\nteam_form\n\n\nReliability\ndnf_rate\n\n\nFast, low-downforce street tracks like Vegas\nlow_df\n\n\n\n\n\nModel code\n# Paste your model code here, or source it:\n# source(\"vegas_model.R\")"
+  },
+  {
+    "objectID": "projects/vegas-gp/index.html#results",
+    "href": "projects/vegas-gp/index.html#results",
+    "title": "Predicting the Las Vegas GP podium",
+    "section": "Results",
+    "text": "Results\n\n\n\nDriver\nPodium chance (pre-qualifying)\n\n\n\n\nAntonelli\n77%\n\n\nVerstappen\n55%\n\n\nLeclerc\n54%\n\n\nRussell\n49%\n\n\nNorris\n36%\n\n\n\nThe probabilities add up to more than 100% because three drivers make the podium, not one."
+  },
+  {
+    "objectID": "projects/vegas-gp/index.html#what-actually-happened",
+    "href": "projects/vegas-gp/index.html#what-actually-happened",
+    "title": "Predicting the Las Vegas GP podium",
+    "section": "What actually happened",
+    "text": "What actually happened\n\n[ADD: actual Vegas podium and a one-line verdict on the model]"
+  },
+  {
+    "objectID": "projects/vegas-gp/index.html#what-id-change",
+    "href": "projects/vegas-gp/index.html#what-id-change",
+    "title": "Predicting the Las Vegas GP podium",
+    "section": "What I’d change",
+    "text": "What I’d change\n\nStarting grid matters most, so re-running the model after qualifying is essential. Antonelli’s 5-place grid penalty changed the picture completely.\n[ADD: one more lesson]"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "",
+    "section": "",
+    "text": "Code"
+  },
+  {
+    "objectID": "index.html#featured-projects",
+    "href": "index.html#featured-projects",
+    "title": "",
+    "section": "Featured projects",
+    "text": "Featured projects\n\n\nVegas GP podium model\nLogistic regression in R on the 2026 F1 season to predict the Las Vegas Grand Prix podium.\n\n\nMy 70.3 run pace\nA regression model trained on 179 of my own runs, then tested on 12 runs it never saw.\n\n\nDoes pole actually win?\nA MySQL database of 75 years of F1 results, queried to measure how starting position drives outcomes.\n\n\nSee all projects →"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "I’m a sport data analyst with a kinesiology background, and an endurance athlete who can’t stop measuring things.\nEducation\n\nM.S. Data Analytics, Sport Performance & Sport Business emphasis, University of Mississippi (in progress)\nB.S. Kinesiology, Oregon State University\n\nTools: R (tidyverse, ggplot2, machine learning), MySQL, Quarto\nExperience\n\nFacility Operations Team Member, Life Time\nFlexologist, StretchLab\nPT Aide & Office Assistant, Healing Motion Physical Therapy\n\nOff the clock: marathons and ultras, training for my first Ironman 70.3 (July 2027), and crewing races.\nDownload my resume (PDF)"
+  },
+  {
+    "objectID": "projects.html",
+    "href": "projects.html",
+    "title": "Projects",
+    "section": "",
+    "text": "Every project starts with a question I actually wanted answered. Code for each one is on GitHub.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCan my own runs predict my 70.3 run pace?\n\n\n\nR\n\nmachine learning\n\nrunning\n\ntriathlon\n\n\n\nA regression model trained on 179 of my runs, tested on 12 it never saw.\n\n\n\nNov 23, 2026\n\n\n\n\n\n\n\n\n\n\n\n\n\nPredicting the Las Vegas GP podium\n\n\n\nR\n\nmachine learning\n\nF1\n\n\n\nLogistic regression in R on the 2026 F1 season.\n\n\n\nNov 20, 2026\n\n\n\n\n\n\nNo matching items"
+  }
+]
